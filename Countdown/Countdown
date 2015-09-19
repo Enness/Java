@@ -34,7 +34,7 @@ public class Countdown
         }
         System.out.println(longestWord);
         try{
-            reader.save("C://Documents//somefile.txt",inputs);
+            reader.save("C://Documents//Dictionary.txt",inputs);
         }catch (Exception e){
             System.out.println(e.getClass());
         }
