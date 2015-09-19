@@ -1,0 +1,60 @@
+public class Countdown 
+{
+	public static void main(String args[]){
+        
+        FileIO reader = new FileIO();
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Enter a string of characters...");
+        String input = scan.nextLine();
+        String longestWord = "";
+        char[] in = input.toCharArray();
+        Arrays.sort(in);
+ 
+        String[] inputs = reader.load("C://Documents//dictionary.txt");    //Reading the File as a String array
+
+        
+        for(int i=0;i<inputs.length;i++)
+        {
+        	String original = inputs[i].trim();
+        	char[] cArr = original.toCharArray();
+        	Arrays.sort(cArr);
+        	if(Arrays.equals(in, cArr))
+        	{
+        		longestWord = original;
+        		break;
+        	}
+        	else if(canSpell(original, in))
+        	{
+        		if(original.length() > longestWord.length())
+        		{
+        			longestWord = original;
+        		}
+        	}
+        	
+        }
+        System.out.println(longestWord);
+        try{
+            reader.save("C://Documents//somefile.txt",inputs);
+        }catch (Exception e){
+            System.out.println(e.getClass());
+        }
+        scan.close();
+    }
+	public static boolean canSpell(String s, char[] chars)
+	{
+		StringBuilder sb = new StringBuilder(s);
+		for(int i = 0; i < chars.length && s.length()>0; i++)
+		{
+			char c = chars[i];
+			for(int j = 0; j < sb.length();j++)
+			{
+				if(sb.charAt(j) == c)
+				{
+					sb.deleteCharAt(j);
+					break;
+				}
+			}
+		}
+		return sb.length() == 0;
+	}
+}
