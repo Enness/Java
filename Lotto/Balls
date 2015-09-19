@@ -1,0 +1,20 @@
+public class Balls 
+{
+	private int num;
+	
+	public Balls()
+	{
+		num = Spin();
+	}
+	
+	public int getValue()
+	{
+	    return num;
+	}
+	
+	public int Spin()
+	{
+	    return (int)(Math.random()*45 + 1);
+	}
+
+}
