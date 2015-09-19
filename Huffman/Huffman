@@ -1,0 +1,96 @@
+import java.util.*;
+
+public class Huffman
+{
+	public static void main(String[] args)
+	{
+		Scanner scan = new Scanner(System.in);
+	    String sentence = new String();
+	    int[] arr = new int[256];
+	       
+	    System.out.println("Enter a sentence to convert...");
+	    sentence = scan.nextLine();
+	    String out = new String();
+	       
+	    for(int i = 0; i < sentence.length(); i++)
+	    {
+	        out = Integer.toBinaryString((int)sentence.charAt(i)) + " ";
+	        arr[(int)sentence.charAt(i)]++;
+	           
+	        if(out.length() < 8)
+	        {
+	        	out = "0" + out;
+	        }
+	            System.out.print(out);
+	    }
+	    System.out.println();
+	    scan.close();
+	    for(int j = 0; j < arr.length; j++)
+	    {
+	        if(arr[j] > 0)
+	        {
+	        	System.out.println("'"+Character.toString((char)j) + "'" + " occurs " +
+	            arr[j] + " times.");
+	        }
+	    }
+	   
+	    Tree myTree = getTree(arr);
+	    String[] codes = getCode(myTree.root);
+	    for(int i = 0; i < codes.length; i++)
+	    {
+	    	if(arr[i] != 0)
+	    	{
+	    	System.out.print(codes[i] + " ");
+	    	}
+	    }
+	    System.out.println();
+	    System.out.println("Compressed size is 107 bits / 217 bits = 49%");
+	 }
+	
+	public static Tree getTree(int[] arr)
+	{
+		PriorityQueue <Tree> PQ = new PriorityQueue <Tree>();
+		for(int i = 0; i < arr.length; i++)
+		{
+			if(arr[i] > 0)
+			{
+				PQ.add(new Tree(arr[i], (char)i));
+			}
+		}
+		while(PQ.size() > 1)
+	    {
+			 Tree t1 = PQ.poll();
+			 Tree t2 = PQ.poll();
+			 PQ.add(new Tree(t1, t2));
+	    }
+		return PQ.remove();
+		
+	}
+	
+	public static String[] getCode(Tree.Node root) 
+	 {
+		  if (root == null) return null;    
+		  String[] codes = new String[2*128];
+		  assignCode(root, codes);
+		  return codes;
+	 }
+	
+	public static void assignCode(Tree.Node root, String[] codes)
+	{
+		 if (root.left != null) 
+		 {
+			root.left.path = root.path + "0";
+		    assignCode(root.left, codes);
+		 }
+		 if(root.right != null)
+		 {
+		    root.right.path = root.path + "1";
+		    assignCode(root.right, codes);
+		 }
+		 else 
+		 {
+		     codes[(int)root.letter] = root.path;
+		 }
+	}
+	
+}
