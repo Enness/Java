@@ -1,0 +1,75 @@
+import java.util.*;
+
+public class Crypto 
+{
+	public static void main(String[] args)
+	{
+		System.out.println("To get the key, need to do the following: ");
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Input the modulus...");
+		long mod = scan.nextLong();
+		System.out.println("Input the generator...");
+		long gen = scan.nextLong();
+		System.out.println("Input g^x mod p");
+		long gx = scan.nextLong();
+		
+		long current = gen;
+		long pow = 1;
+		
+		while(current != gx)
+		{
+			pow = pow + 1;
+			current = modMult(current, gen, mod);
+			if(current >= mod)
+			{
+				current = current % mod;
+			}
+		}
+		System.out.println("You've found the private key which is: " + pow);
+		System.out.println("To decode the message, enter c1...");
+		long c1 = scan.nextLong();
+		System.out.println("And c2...");
+		long c2 = scan.nextLong();
+		System.out.println("Input the private key...");
+		long key = scan.nextLong();
+		long div = modPow(c1, mod-1-key, mod);
+		long message = modMult(div, c2, mod);
+		System.out.println("The message reads: " + message);
+		scan.close();
+	}
+	public static long modPow(long num, long pow, long mod)
+	{
+		if(pow==0)
+		{
+			return 1;
+		}
+		else if(pow % 2 == 0)
+		{
+			long halfpow=modPow(num, pow/2, mod);
+			return modMult(halfpow, halfpow, mod);
+		}
+		else
+		{
+			long halfpow = modPow(num, pow/2, mod);
+			long firstbit = modMult(halfpow, halfpow, mod);
+			return modMult(firstbit, num, mod);
+		}
+	}
+	public static long modMult(long first, long second, long mod)
+	{
+		if(second == 0)
+		{
+			return 0;
+		}
+		else if(second % 2 ==0)
+		{
+			long half = modMult(first, second/2, mod);
+			return (half+half) % mod;
+		}
+		else
+		{
+			long half = modMult(first, second/2, mod);
+			return (half+half+first) % mod;
+		}
+	}
+}
